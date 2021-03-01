@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+
+<div id="map"></div>
+<br/>
+<div id="main">
+    <input type="checkbox" id="retur"> Returresa &nbsp;
+    <select id="end">
+        <option value="59.334591,18.063240">Stockholm</option>
+        <option value="57.708870,11.974560">Göteborg</option>
+        <option value="63.825848,20.263035">Umeå</option>
+        <option value="57.634800,18.294840">Visby</option>
+        <option value="59.23797,14.43077">Degerfors</option>
+        <option value="59.27412,15.2066" selected>Örebro</option>
+        <option value="52.520008,13.404954">Berlin</option>
+        <option value="59.911491,10.757933">Oslo</option>
+        <option value="55.676098,12.568337">Köpenhamn</option>
+    </select>
+    <br/><br/>
+    <button id="start">START</button>
+    <input type="hidden" id="start_lat">
+    <input type="hidden" id="start_lng">
+
+    <button id="stop" disabled>STOP</button>
+    <input type="hidden" id="stop_lat">
+    <input type="hidden" id="stop_lng">
+
+    <input type="hidden" id="start1" value="59.32205510000001,14.504827400000002">
+    <!--<input type="hidden" id="end" value="59.27412,15.2066">-->
+
+    <button id="done" disabled>AVSLUTA RESAN</button>
+    <p id="km-info"></p>
+</div>
+
+<p id="msg"></p>
+<p id="resa"></p>
+<hr/>
+<script src="script.js"></script>
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS0WjtiDPHv6frMEzPHh21Eg0QgW2dSys&callback=initMap&v=weekly&libraries=geometry"
+    async
+    type="text/javascript"
+></script>
+</body>
+</html>

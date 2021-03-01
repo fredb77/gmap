@@ -1,0 +1,26 @@
+#main {
+    width: 100%;
+    text-align: right;
+}
+
+#map {
+    height: 50%;
+    width: 100%;
+    border: 1px black solid;
+}
+
+button{
+    font-size: 20px;
+    padding: 10px;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 5;  
+    padding: 1;
+}
+
+p{
+    font-size: 25px;
+}
