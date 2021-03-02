@@ -90,7 +90,7 @@ function initMap() {
       var long = k.substring(k.indexOf(',') + 1);
       localStorage.setItem("LatStop", lati);
       localStorage.setItem("LngStop", long);
-      btnStart.disabled = false;
+      btnStart.disabled = true;
       btnStop.disabled = true;
       btnDone.disabled = false;
       let x = localStorage.getItem("LatStart");
