@@ -4,26 +4,30 @@
 <meta charset="UTF-8">
 <title></title>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 <div id="map"></div>
 <br/>
 <div id="main">
-    <input type="checkbox" id="retur"> Tur och retur &nbsp;
-    <select id="end">
-        <option value="59.334591,18.063240">Stockholm</option>
-        <option value="57.708870,11.974560">Göteborg</option>
-        <option value="63.825848,20.263035">Umeå</option>
-        <option value="57.634800,18.294840">Visby</option>
-        <option value="59.23797,14.43077">Degerfors</option>
-        <option value="59.27412,15.2066" selected>Örebro</option>
-        <option value="52.520008,13.404954">Berlin</option>
-        <option value="59.911491,10.757933">Oslo</option>
-        <option value="55.676098,12.568337">Köpenhamn</option>
-    </select>
-    <input type="button" id="st" value="Rapportera resa manuellt"/>
-    <input type="button" id="clearLs" value="Clear localstorage"/>
+    <div id="top">
+        <input type="checkbox" id="retur" name="retur"><label id="lbl" for="retur">Tur och retur</label>
+        <select id="end">
+            <option value="59.334591,18.063240">Stockholm</option>
+            <option value="57.708870,11.974560">Göteborg</option>
+            <option value="63.825848,20.263035">Umeå</option>
+            <option value="57.634800,18.294840">Visby</option>
+            <option value="59.23797,14.43077">Degerfors</option>
+            <option value="59.27412,15.2066" selected>Örebro</option>
+            <option value="52.520008,13.404954">Berlin</option>
+            <option value="59.911491,10.757933">Oslo</option>
+            <option value="55.676098,12.568337">Köpenhamn</option>
+        </select>
+        <input type="button" id="st" value="Rapportera resa manuellt"/>
+        <input type="button" id="clearLs" value="Clear localstorage"/>
+    </div>
     <br/><br/>
     <div id="btns">
         <button id="start">START</button>
@@ -31,13 +35,14 @@
         <button id="done" disabled>NY RESA</button>
     </div>
     <div id="report_manual">
-        <input type="text" id="input1" class="input" placeholder="Ange start adress"/><br/><br/>
-        <input type="text" id="input2" class="input" placeholder="Ange slut adress"/><br/><br/>
-        <button id="submit_input">Registrera</button><br/>
+        <input type="text" id="input1" class="input" placeholder="Ange start address" required/><br/><br/>
+        <input type="text" id="input2" class="input" placeholder="Ange slut address" required/><br/><br/>
+        <button id="submit_input">Rapportera resa</button>
+    </div>
+    <div>
+        <p id="resa"></p>
     </div>
 </div>
-<hr/>
-<p id="resa"></p>
 <script src="script.js"></script>
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS0WjtiDPHv6frMEzPHh21Eg0QgW2dSys&callback=initMap&v=weekly&libraries=geometry,places"

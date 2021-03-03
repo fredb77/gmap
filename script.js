@@ -6,13 +6,24 @@ var btnStop = document.getElementById("stop");
 var btnDone = document.getElementById("done");
 var retur = document.getElementById("retur");
 var btns = document.getElementById("btns");
+var resa = document.getElementById("resa");
 var map, infoWindow;
 var ts = document.getElementById("report_manual");
 ts.style.display = "none";
 
+if(localStorage.getItem("onTheRoad") == 1){
+  btnStart.disabled = true;
+  btnStop.disabled = false;
+}
+
+if(resa){
+  resa.style.display = "none";
+}
+
 if(st){
   st.addEventListener("click", function() 
   {
+    resa.style.display = "none";
     if (ts.style.display === 'none') {
       btns.style.display = "none";
       ts.style.display = 'block';
@@ -89,6 +100,9 @@ function initMap() {
   if(btnStart){
       btnStart.addEventListener("click", function() 
       {
+        st.disabled = true;
+        resa.style.display = "none";
+        localStorage.clear();
         let latlngarray = [x,y];
         localStorage["latlngarray"] = JSON.stringify(latlngarray);
         localStorage.setItem("LatStart", x);
@@ -121,6 +135,7 @@ function initMap() {
   if(btnDone){
     btnDone.addEventListener("click", function() 
     {
+      st.disabled = false;
       localStorage.clear();
       location.reload();
     });
@@ -193,6 +208,7 @@ function initMap() {
   if(submit_input){
     submit_input.addEventListener("click", function() 
     {
+      submit_input.style.display = "none";
       localStorage.setItem("LatStart", latitude);
       localStorage.setItem("LngStart", longitude);
       localStorage.setItem("manual", "1");
@@ -365,5 +381,13 @@ function getTotalKmFromTrip()
   }else{
     txt = "Enkel resa";
   }
-  document.getElementById("resa").innerText = txt + "\nResa med bil: " + car + " km " + "\nFågelvägen: " + bird + " km"; 
+  resa.style.display = "block";
+  //document.getElementById("resa").innerText = txt + "\n\nResa med bil: " + car + " km " + "\n\nFågelvägen: " + bird + " km";
+  document.getElementById("resa").innerHTML += `
+    <b>Info:</b><br/>
+    Resa med bil ` + car + ` km, 
+    fågelvägen ` + bird + ` km
+    <i>(`+ txt + `)</i>
+  `;
+  
 }
