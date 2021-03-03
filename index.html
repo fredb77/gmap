@@ -7,11 +7,10 @@
 <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-
 <div id="map"></div>
 <br/>
 <div id="main">
-    <input type="checkbox" id="retur"> Returresa &nbsp;
+    <input type="checkbox" id="retur"> Tur och retur &nbsp;
     <select id="end">
         <option value="59.334591,18.063240">Stockholm</option>
         <option value="57.708870,11.974560">Göteborg</option>
@@ -23,28 +22,25 @@
         <option value="59.911491,10.757933">Oslo</option>
         <option value="55.676098,12.568337">Köpenhamn</option>
     </select>
+    <input type="button" id="st" value="Rapportera resa manuellt"/>
+    <input type="button" id="clearLs" value="Clear localstorage"/>
     <br/><br/>
-    <button id="start">START</button>
-    <input type="hidden" id="start_lat">
-    <input type="hidden" id="start_lng">
-
-    <button id="stop" disabled>STOP</button>
-    <input type="hidden" id="stop_lat">
-    <input type="hidden" id="stop_lng">
-
-    <input type="hidden" id="start1" value="59.32205510000001,14.504827400000002">
-    <!--<input type="hidden" id="end" value="59.27412,15.2066">-->
-
-    <button id="done" disabled>NY RESA</button>
-    <p id="km-info"></p>
+    <div id="btns">
+        <button id="start">START</button>
+        <button id="stop" disabled>STOP</button>
+        <button id="done" disabled>NY RESA</button>
+    </div>
+    <div id="report_manual">
+        <input type="text" id="input1" class="input" placeholder="Ange start adress"/><br/><br/>
+        <input type="text" id="input2" class="input" placeholder="Ange slut adress"/><br/><br/>
+        <button id="submit_input">Registrera</button><br/>
+    </div>
 </div>
 <hr/>
-<p id="msg"></p>
 <p id="resa"></p>
-
 <script src="script.js"></script>
 <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS0WjtiDPHv6frMEzPHh21Eg0QgW2dSys&callback=initMap&v=weekly&libraries=geometry"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS0WjtiDPHv6frMEzPHh21Eg0QgW2dSys&callback=initMap&v=weekly&libraries=geometry,places"
     async
     type="text/javascript"
 ></script>

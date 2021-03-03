@@ -1,25 +1,55 @@
-
-var x,y;
-var zooming = 8;
-var whereAreYou = "Du startar här";
+var x, y, latitude, longitude, latitude2, longitude2;
+var zooming = 10;
+var whereAreYou = "Du befinner dig här";
 var btnStart = document.getElementById("start");
 var btnStop = document.getElementById("stop");
 var btnDone = document.getElementById("done");
 var retur = document.getElementById("retur");
+var btns = document.getElementById("btns");
 var map, infoWindow;
+var ts = document.getElementById("report_manual");
+ts.style.display = "none";
 
-if (localStorage.getItem("onTheRoad") == 1){
-  btnStart.disabled = true;
+if(st){
+  st.addEventListener("click", function() 
+  {
+    if (ts.style.display === 'none') {
+      btns.style.display = "none";
+      ts.style.display = 'block';
+    } else {
+      btns.style.display = "block";
+      ts.style.display = 'none';
+    }
+  });
+}
+
+/****** RÄNSAR LOCALSTORAGE *********/
+
+if(clearLs){
+  clearLs.addEventListener("click", function() 
+  {
+    localStorage.clear();
+    location.reload();
+  });
 }
 
 /****** SKRIVER UT KARTAN *********/
 
-
 function initMap() {    
   map = new google.maps.Map(document.getElementById("map"), {
-    //center: { lat: -34.397, lng: 150.644 },
     zoom: zooming,
   });
+
+  const input1 = document.getElementById("input1");
+  const input2 = document.getElementById("input2");
+  const options = {
+    componentRestrictions: { country: "se" },
+    fields: ["formatted_address", "geometry", "name"],
+    origin: map.getCenter(),
+    strictBounds: false,
+    types: ["address"],
+  };
+  
   infoWindow = new google.maps.InfoWindow();
 
   if (navigator.geolocation) {
@@ -54,18 +84,7 @@ function initMap() {
 
   const directionsService = new google.maps.DirectionsService();
   const directionsRenderer = new google.maps.DirectionsRenderer();
-  
   directionsRenderer.setMap(map);
-
-  if(end){
-    end.addEventListener("click", function() 
-    {
-      var k = document.getElementById("end").value;
-      var lati = k.substr(0, k.indexOf(','));
-      var long = k.substring(k.indexOf(',') + 1);
-      //document.getElementById("km-info").innerHTML = "lat: " + lati + " " + "lng: " + long;
-    });
-  }
 
   if(btnStart){
       btnStart.addEventListener("click", function() 
@@ -95,22 +114,90 @@ function initMap() {
       btnDone.disabled = false;
       let x = localStorage.getItem("LatStart");
       let y = localStorage.getItem("LngStart");
-      //calculateAndDisplayRoute(directionsService, directionsRenderer);
       calculateDistance(directionsService, directionsRenderer, x, y, lati, long);
-      
     });
   }
   
   if(btnDone){
     btnDone.addEventListener("click", function() 
     {
-      //localStorage.setItem("onTheRoad", "0");
       localStorage.clear();
       location.reload();
-      //calculateAndDisplayRoute(directionsService, directionsRenderer);
-      //getTotalKmFromTrip();
+    });
+  }
+
+  const autocomplete = new google.maps.places.Autocomplete(
+    input1,
+    options
+  );
+
+  const autocomplete2 = new google.maps.places.Autocomplete(
+    input2,
+    options
+  );
+
+  autocomplete.bindTo("bounds", map);
+  const infowindow = new google.maps.InfoWindow();
+  const infowindowContent = document.getElementById("infowindow-content");
+  infowindow.setContent(infowindowContent);
+  const marker = new google.maps.Marker({
+    map,
+    anchorPoint: new google.maps.Point(0, -29),
+  });
+  autocomplete.addListener("place_changed", () => {
+    infowindow.close();
+    marker.setVisible(false);
+    const place = autocomplete.getPlace();
+
+    if (!place.geometry || !place.geometry.location) {
+      window.alert(
+        "No details available for input: '" + place.name + "'"
+      );
+      return;
     }
-    );
+
+    marker.setPosition(place.geometry.location);
+    marker.setVisible(true);
+
+    latitude = place.geometry.location.lat();
+    longitude = place.geometry.location.lng();
+  });
+
+  autocomplete2.bindTo("bounds", map);
+  const infowindowContent2 = document.getElementById("infowindow-content");
+  infowindow.setContent(infowindowContent2);
+  const marker2 = new google.maps.Marker({
+    map,
+    anchorPoint: new google.maps.Point(0, -29),
+  });
+  autocomplete2.addListener("place_changed", () => {
+    infowindow.close();
+    marker2.setVisible(false);
+    const place2 = autocomplete2.getPlace();
+
+    if (!place2.geometry || !place2.geometry.location) {
+      window.alert(
+        "No details available for input: '" + place2.name + "'"
+      );
+      return;
+    }
+    
+    marker.setPosition(place2.geometry.location);
+    marker.setVisible(true);
+
+    latitude2 = place2.geometry.location.lat();
+    longitude2 = place2.geometry.location.lng();
+  });
+
+
+  if(submit_input){
+    submit_input.addEventListener("click", function() 
+    {
+      localStorage.setItem("LatStart", latitude);
+      localStorage.setItem("LngStart", longitude);
+      localStorage.setItem("manual", "1");
+      calculateDistance(directionsService, directionsRenderer, latitude, longitude, latitude2, longitude2);
+    });
   }
 }
 
@@ -126,7 +213,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 /******** RÄKNAR UT KILOMETER MELLAN DESTINATIONERNA (FÅGELVÄGEN) ********/
 
-function calculateDistance(directionsService, directionsRenderer, latStart,lngStart,latStop,lngStop)
+function calculateDistance(directionsService, directionsRenderer, latStart, lngStart, latStop, lngStop)
 {
     var R = 6378.137; // Radien på jorden i km
     var dLat = latStop * Math.PI / 180 - latStart * Math.PI / 180;
@@ -141,7 +228,6 @@ function calculateDistance(directionsService, directionsRenderer, latStart,lngSt
       bird = bird * 2;
       bird = bird.toString();
     }
-      
     calculateAndDisplayRoute(directionsService, directionsRenderer, latStop, lngStop, bird);
 }
 
@@ -149,12 +235,12 @@ function calculateDistance(directionsService, directionsRenderer, latStart,lngSt
 
 function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop, lngStop, birdPath) 
 {
-  let a = localStorage.getItem("LatStart");
-  let b = localStorage.getItem("LngStart");
-  let arr = [a, b];
-  let startLocation = arr.toString();
-  //let endLocation = document.getElementById("end").value;
-
+  let arr = [
+    localStorage.getItem("LatStart"), 
+    localStorage.getItem("LngStart")
+  ];
+  var startLocation = arr.toString();
+  
   let arr2 = [latStop, lngStop];
   let endLocation = arr2.toString();
 
@@ -171,8 +257,8 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
         window.alert('Directions request failed due to ' + status);
         return;
       } else {
-        directionsRenderer.setDirections(response); // Add route to the map
-        var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
+        directionsRenderer.setDirections(response); // SKAPAR RUTT PÅ KARTAN
+        var directionsData = response.routes[0].legs[0];
         if (!directionsData) {
           window.alert('Directions request failed');
           return;
@@ -180,15 +266,11 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
         else {
           var returResa = directionsData.distance.text;
           returResa = returResa.substring(0,returResa.length-2);
+          var sum = parseFloat(returResa);
 
-          if(retur.checked){
+          if(retur.checked)
             var sum = parseFloat(returResa) * 2;
-            //document.getElementById('msg').innerHTML += "Sträckan med bil tur och retur: " + sum + " km";
-          }else{
-            var sum = parseFloat(returResa);
-            //document.getElementById('msg').innerHTML += "Sträckan med bil: " + 
-            //sum + " (" + directionsData.duration.text + ").";
-          }
+            
           let car = sum;
           car = car.toString();
           storeInLocalstorage(latStop, lngStop, birdPath, car);
@@ -240,8 +322,14 @@ function showTrip()
 
 function storeInLocalstorage(x, y, birdPath, carPath)
 {
-  let lat = localStorage.getItem("LatStart");
-  let lng = localStorage.getItem("LngStart");
+  if(localStorage.getItem("manual") == 1){
+    var lat = 59.3222974;
+    var lng = 14.5169702;
+  }else{
+    var lat = localStorage.getItem("LatStart");
+    var lng = localStorage.getItem("LngStart");
+  }
+  
   let dataInLs = JSON.parse(localStorage.getItem("Rutt"));
 
   if(dataInLs == null) dataInLs = [];
@@ -264,14 +352,13 @@ function storeInLocalstorage(x, y, birdPath, carPath)
 function getTotalKmFromTrip()
 {
   var dataInLs = JSON.parse(localStorage.getItem("Rutt"));
-  //console.log(dataInLs);
   if (!dataInLs) return [];
   
   let bird = 0, car = 0;
 
   for(let i = 0; i < dataInLs.length; i++){
-    bird = bird + Number(dataInLs[i].birdPath);
-    car = car + Number(dataInLs[i].carPath);
+    bird = bird + Number(dataInLs[i].birdPath); // FÅGELVÄGEN
+    car = car + Number(dataInLs[i].carPath);    // BILVÄGEN
   }
   if(retur.checked){
     txt = "Tur och retur";

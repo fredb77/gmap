@@ -3,6 +3,11 @@
     text-align: left;
 }
 
+.input{
+    font-size: 15px;
+    width: 500px;
+}
+
 #map {
     height: 50%;
     width: 100%;
