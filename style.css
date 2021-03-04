@@ -61,7 +61,7 @@ p{
     }
 
     #resa{
-        width: fit-content;
+        width: 100%;
         font-family: 'Montserrat', sans-serif;
         background-color: aliceblue;
         border: black 1px solid;
