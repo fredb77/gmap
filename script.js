@@ -48,9 +48,11 @@ if(clearLs){
 
 /****** SKRIVER UT KARTAN *********/
 
-function initMap() {    
+function initMap() 
+{    
   map = new google.maps.Map(document.getElementById("map"), {
     zoom: zooming,
+    mapTypeId:google.maps.MapTypeId.ROADMAP,
   });
 
   const input1 = document.getElementById("input1");
@@ -62,7 +64,7 @@ function initMap() {
     strictBounds: false,
     types: ["address"],
   };
-  
+
   infoWindow = new google.maps.InfoWindow();
 
   if (navigator.geolocation) {
@@ -175,7 +177,6 @@ function initMap() {
 
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
-
     latitude = place.geometry.location.lat();
     longitude = place.geometry.location.lng();
   });
@@ -206,7 +207,6 @@ function initMap() {
     longitude2 = place2.geometry.location.lng();
   });
 
-
   if(submit_input){
     submit_input.addEventListener("click", function() 
     {
@@ -219,7 +219,8 @@ function initMap() {
   }
 }
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+function handleLocationError(browserHasGeolocation, infoWindow, pos) 
+{
   infoWindow.setPosition(pos);
   infoWindow.setContent(
     browserHasGeolocation
@@ -327,15 +328,6 @@ function geocodeLatLng(geocoder, map, infowindow, x, y)
   });
 }
 
-/****** VISAR ALLA STOP PÅ RESAN **********/
-
-function showTrip()
-{
-  let trip = localStorage.getItem("rutt");
-  let ex = trip.replace(",", "<br/>");
-  document.getElementById("resa").innerHTML = ex;
-}
-
 /******* LÄGGA IN OLIKA STOPP I LOCALSTORAGE *******/
 
 function storeInLocalstorage(x, y, birdPath, carPath)
@@ -349,7 +341,6 @@ function storeInLocalstorage(x, y, birdPath, carPath)
   }
   
   let dataInLs = JSON.parse(localStorage.getItem("Rutt"));
-
   if(dataInLs == null) dataInLs = [];
   
   let entry = 
@@ -384,12 +375,10 @@ function getTotalKmFromTrip()
     txt = "Enkel resa";
   }
   resa.style.display = "block";
-  //document.getElementById("resa").innerText = txt + "\n\nResa med bil: " + car + " km " + "\n\nFågelvägen: " + bird + " km";
   document.getElementById("resa").innerHTML += `
     <b>Info:</b><br/>
     Resa med bil ` + car + ` km, 
     fågelvägen ` + bird + ` km
     <i>(`+ txt + `)</i>
   `;
-  
 }

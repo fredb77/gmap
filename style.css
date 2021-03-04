@@ -74,7 +74,8 @@ p{
     }
     
     #map {
-        height: 25%;
+        scale: 10;
+        height: 35%;
         width: 100%;
         border: 1px black solid;
     }
