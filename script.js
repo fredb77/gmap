@@ -31,6 +31,8 @@ if(st){
       btns.style.display = "block";
       ts.style.display = 'none';
     }
+    st.disabled = true;
+    localStorage.clear();
   });
 }
 
