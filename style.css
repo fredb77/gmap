@@ -59,6 +59,15 @@ p{
         width: 100%;
         text-align: left;
     }
+
+    #resa{
+        width: fit-content;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 35px;
+        background-color: aliceblue;
+        border: black 1px solid;
+        padding: 20px;
+    }
     
     .input{
         font-size: 15px;
@@ -102,7 +111,7 @@ p{
     }
 
     #lbl{
-        font-size: 60px;
+        font-size: 45px;
         margin-left: 30px;
     }
 }
