@@ -295,8 +295,7 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
           storeInLocalstorage(latStop, lngStop, birdPath, car);
         }
       }
-    });
-    
+    }); 
 }
 
 /******* HÄMTA STAD FRÅN LATITUDE OCH LONGITUDE *****/
