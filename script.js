@@ -114,7 +114,8 @@ function initMap()
         localStorage.setItem("onTheRoad", "1");
         btnStart.disabled = true;
         btnStop.disabled = false;
-        btnDone.disabled = true;
+        clearLs.disabled = true;
+        //btnDone.disabled = true;
       }
     );
   }
@@ -129,13 +130,14 @@ function initMap()
       localStorage.setItem("LngStop", long);
       btnStart.disabled = true;
       btnStop.disabled = true;
-      btnDone.disabled = false;
+      clearLs.disabled = false;
+      //btnDone.disabled = false;
       let x = localStorage.getItem("LatStart");
       let y = localStorage.getItem("LngStart");
       calculateDistance(directionsService, directionsRenderer, x, y, lati, long);
     });
   }
-  
+  /*
   if(btnDone){
     btnDone.addEventListener("click", function() 
     {
@@ -144,6 +146,7 @@ function initMap()
       location.reload();
     });
   }
+  */
 
   const autocomplete = new google.maps.places.Autocomplete(
     input1,
@@ -214,6 +217,8 @@ function initMap()
       localStorage.setItem("LatStart", latitude);
       localStorage.setItem("LngStart", longitude);
       localStorage.setItem("manual", "1");
+      input1.disabled = true;
+      input2.disabled = true;
       calculateDistance(directionsService, directionsRenderer, latitude, longitude, latitude2, longitude2);
     });
   }
