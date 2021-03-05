@@ -10,6 +10,7 @@ var resa = document.getElementById("resa");
 var map, infoWindow;
 var ts = document.getElementById("report_manual");
 ts.style.display = "none";
+clearLs.disabled = true;
 
 if(localStorage.getItem("onTheRoad") == 1){
   btnStart.disabled = true;
@@ -32,6 +33,7 @@ if(st){
       ts.style.display = 'none';
     }
     st.disabled = true;
+    start.disabled = true;
     localStorage.clear();
   });
 }
@@ -214,6 +216,7 @@ function initMap()
     submit_input.addEventListener("click", function() 
     {
       submit_input.style.display = "none";
+      clearLs.disabled = false;
       localStorage.setItem("LatStart", latitude);
       localStorage.setItem("LngStart", longitude);
       localStorage.setItem("manual", "1");

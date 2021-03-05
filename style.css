@@ -28,6 +28,11 @@ button{
     padding: 10px;
 }
 
+select{
+    font-size: 20px;
+    padding: 10px;
+}
+
 html,
 body {
     height: 100%;
