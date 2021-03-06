@@ -1,5 +1,7 @@
 var x, y, latitude, longitude, latitude2, longitude2;
 var zooming = 10;
+var mapClick = 0;
+var map, infoWindow;
 var whereAreYou = "Du befinner dig här";
 var btnStart = document.getElementById("start");
 var btnStop = document.getElementById("stop");
@@ -7,20 +9,32 @@ var btnDone = document.getElementById("done");
 var retur = document.getElementById("retur");
 var btns = document.getElementById("btns");
 var resa = document.getElementById("resa");
-var map, infoWindow;
+var bottom = document.getElementById("bottom");
+var topbar = document.getElementById("topbar");
 var ts = document.getElementById("report_manual");
-ts.style.display = "none";
+
+
+//ts.style.display = "none";
 clearLs.disabled = true;
+
+function closeInfoWindow() {
+  if (infoWindow !== null) {
+      google.maps.event.clearInstanceListeners(infoWindow);  // just in case handlers continue to stick around
+      infoWindow.close();
+      infoWindow = null;
+  }
+}
 
 if(localStorage.getItem("onTheRoad") == 1){
   btnStart.disabled = true;
   btnStop.disabled = false;
 }
 
-if(resa){
-  resa.style.display = "none";
+if(bottom){
+  bottom.style.display = "none";
 }
 
+/*
 if(st){
   st.addEventListener("click", function() 
   {
@@ -32,12 +46,13 @@ if(st){
       btns.style.display = "block";
       ts.style.display = 'none';
     }
+    clearLs.disabled = false;
     st.disabled = true;
     start.disabled = true;
     localStorage.clear();
   });
 }
-
+*/
 /****** RÄNSAR LOCALSTORAGE *********/
 
 if(clearLs){
@@ -57,6 +72,8 @@ function initMap()
     mapTypeId:google.maps.MapTypeId.ROADMAP,
   });
 
+  const geocoder = new google.maps.Geocoder();
+
   const input1 = document.getElementById("input1");
   const input2 = document.getElementById("input2");
   const options = {
@@ -66,6 +83,121 @@ function initMap()
     strictBounds: false,
     types: ["address"],
   };
+
+
+/************************************************************************************************************ */
+
+  var txt = "";
+  var iWin1, iWin2;
+  map.addListener("click", (mapsMouseEvent) => {
+    
+    if(mapClick == 0){
+      txt = "Du startar här!";
+      iWin1 = new google.maps.InfoWindow({
+        position: mapsMouseEvent.latLng,
+      });
+      iWin1.setContent( 
+        txt
+      );
+
+      localStorage.setItem("LatStart", JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2));
+      localStorage.setItem("LngStart", JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2));
+      localStorage.setItem("onTheRoad", "1");
+      
+      geocodeLatLng(geocoder, map, infowindow, JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2),JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2), true);
+
+      input1.disabled = true;
+      btnStart.disabled = true;
+      btnStop.disabled = false;
+      iWin1.open(map);
+      console.log(mapClick);
+    }else if (mapClick == 1){
+      txt = "Du kör hit!";
+      iWin2 = new google.maps.InfoWindow({
+        position: mapsMouseEvent.latLng,
+      });
+      iWin2.setContent( 
+        txt
+      );
+
+      var lat = JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2);
+      var lng = JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2);
+
+      localStorage.setItem("LatStop", lat);
+      localStorage.setItem("LngStop", lng);
+      btnStart.disabled = true;
+      btnStop.disabled = true;
+      clearLs.disabled = false;
+      submit_input.style.display = "none";
+      
+      let x = localStorage.getItem("LatStart");
+      let y = localStorage.getItem("LngStart");
+      calculateDistance(directionsService, directionsRenderer, x, y, lat, lng);
+      geocodeLatLng(geocoder, map, infowindow, lat, lng, false);
+      iWin2.open(map);
+      console.log(mapClick);
+    }else{
+      localStorage.removeItem("go");
+      localStorage.removeItem("to");
+      console.log(mapClick);
+    }
+    mapClick++;
+
+    if(mapClick == 3){
+      iWin1.close();
+      iWin2.close();
+      mapClick = 0;
+    }
+    //infoWindow.open(map);
+    
+    // Close the current InfoWindow.
+    
+    // Create a new InfoWindow.
+    /*
+    var txt = "";
+    if(click == false){
+      txt = "Du startar här!";
+    }else{
+      txt = "Du kör hit!";
+    }
+
+    if(click == false){
+      infoWindow = new google.maps.InfoWindow({
+        position: mapsMouseEvent.latLng,
+      });
+      infoWindow.setContent( 
+        txt
+      );
+      click = true;
+    }else{
+      infoWindow.close();
+      infoWindow = new google.maps.InfoWindow({
+        position: mapsMouseEvent.latLng,
+      });
+      infoWindow.setContent( 
+        txt
+        
+      );
+    }
+    
+    infoWindow.open(map);
+
+    if(click == false){
+      localStorage.setItem("go", JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2));
+    }else{
+      localStorage.setItem("to", JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2));
+    }
+
+    JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2);
+    
+    console.log(JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2));
+    console.log(JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2));
+    console.log(click);*/
+  });
+
+/************************************************************************************************************ */
+
+
 
   infoWindow = new google.maps.InfoWindow();
 
@@ -106,14 +238,17 @@ function initMap()
   if(btnStart){
       btnStart.addEventListener("click", function() 
       {
-        st.disabled = true;
-        resa.style.display = "none";
+        mapClick = 1;
+        //st.disabled = true;
+        bottom.style.display = "none";
         localStorage.clear();
         let latlngarray = [x,y];
         localStorage["latlngarray"] = JSON.stringify(latlngarray);
         localStorage.setItem("LatStart", x);
         localStorage.setItem("LngStart", y);
         localStorage.setItem("onTheRoad", "1");
+        geocodeLatLng(geocoder, map, infowindow, x, y, true);
+        input1.disabled = true;
         btnStart.disabled = true;
         btnStop.disabled = false;
         clearLs.disabled = true;
@@ -133,9 +268,11 @@ function initMap()
       btnStart.disabled = true;
       btnStop.disabled = true;
       clearLs.disabled = false;
+      submit_input.style.display = "none";
       //btnDone.disabled = false;
       let x = localStorage.getItem("LatStart");
       let y = localStorage.getItem("LngStart");
+      geocodeLatLng(geocoder, map, infowindow, lati, long, false);
       calculateDistance(directionsService, directionsRenderer, x, y, lati, long);
     });
   }
@@ -215,10 +352,18 @@ function initMap()
   if(submit_input){
     submit_input.addEventListener("click", function() 
     {
-      submit_input.style.display = "none";
+      if(localStorage.getItem("onTheRoad") == 1){
+        latitude = localStorage.getItem("LatStart");
+        longitude = localStorage.getItem("LngStart");
+      }else{
+        localStorage.setItem("LatStart", latitude);
+        localStorage.setItem("LngStart", longitude);
+      }
+      
       clearLs.disabled = false;
-      localStorage.setItem("LatStart", latitude);
-      localStorage.setItem("LngStart", longitude);
+      btnStop.disabled = true;
+      submit_input.style.display = "none";
+      
       localStorage.setItem("manual", "1");
       input1.disabled = true;
       input2.disabled = true;
@@ -301,6 +446,7 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
           let car = sum;
           car = car.toString();
           storeInLocalstorage(latStop, lngStop, birdPath, car);
+          //geocodeAddress(geocoder, map);
         }
       }
     }); 
@@ -308,13 +454,16 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
 
 /******* HÄMTA STAD FRÅN LATITUDE OCH LONGITUDE *****/
 
-function geocodeLatLng(geocoder, map, infowindow, x, y) 
+function geocodeLatLng(geocoder, map, infowindow, x, y, z) 
 {
   var input = [x, y]
   const lat_lng = {
       lat: parseFloat(input[0]),
       lng: parseFloat(input[1]),
   };
+
+  //const geocoder = new google.maps.Geocoder();
+var c = 0;
   geocoder.geocode({ location: lat_lng }, (results, status) => {
     if (status === "OK") {
       if (results[0]) {
@@ -323,15 +472,31 @@ function geocodeLatLng(geocoder, map, infowindow, x, y)
           position: lat_lng,
           map: map,
         });
-        infowindow.setContent(results[8].formatted_address);
-        infowindow.open(map, marker);
+        //infowindow.setContent(results[8].formatted_address);
+        //infowindow.open(map, marker);
       } else {
         window.alert("Hittade ingenting");
       }
     } else {
       window.alert("Error: " + status);
     }
-    storeInLocalstorage(x, y);
+    
+    if(z){
+      document.getElementById("input1").value = results[0].formatted_address;
+    }else{
+      input2.disabled = true;
+      document.getElementById("input2").value = results[0].formatted_address;
+    }
+    
+    
+    
+    
+      
+
+    console.log(c);
+    c++;
+      console.log(results[0].formatted_address);
+    //storeInLocalstorage(x, y);
   });
 }
 
@@ -381,11 +546,26 @@ function getTotalKmFromTrip()
   }else{
     txt = "Enkel resa";
   }
-  resa.style.display = "block";
+  bottom.style.display = "block";
   document.getElementById("resa").innerHTML += `
     <b>Info:</b><br/>
     Resa med bil ` + car + ` km, 
     fågelvägen ` + bird + ` km
     <i>(`+ txt + `)</i>
   `;
+}
+
+function geocodeAddress(geocoder, resultsMap) {
+  const address = document.getElementById("address").value;
+  geocoder.geocode({ address: address }, (results, status) => {
+    if (status === "OK") {
+      resultsMap.setCenter(results[0].geometry.location);
+      new google.maps.Marker({
+        map: resultsMap,
+        position: results[0].geometry.location,
+      });
+    } else {
+      alert("Geocode was not successful for the following reason: " + status);
+    }
+  });
 }

@@ -12,7 +12,7 @@
 #resa{
     width: fit-content;
     font-family: 'Montserrat', sans-serif;
-    background-color: aliceblue;
+    background-color: lightgreen;
     border: black 1px solid;
     padding: 20px;
 }
@@ -35,6 +35,7 @@ select{
 
 html,
 body {
+    background-color: snow;
     height: 100%;
     margin: 5;  
     padding: 1;

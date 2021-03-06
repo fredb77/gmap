@@ -12,7 +12,7 @@
 <div id="map"></div>
 <br/>
 <div id="main">
-    <div id="top">
+    <div id="topbar">
         <button id="start">START</button>
         <button id="stop" disabled>STOP</button>
         
@@ -20,7 +20,7 @@
         <!--<input type="button" id="st" value="Rapportera resa manuellt"/>
         <input type="button" id="clearLs" value="NY RESA"/>-->
         <button id="clearLs">NY RESA</button>
-        <button id="st">Rapportera resa manuellt</button>
+        <!--<button id="st">Rapportera resa manuellt</button>-->
         
         <select id="end">
             <option value="59.334591,18.063240">Stockholm</option>
@@ -42,12 +42,18 @@
         <!--<button id="done" disabled>NY RESA</button>-->
     </div>
     <div id="report_manual">
-        <input type="text" id="input1" class="input" placeholder="Ange start address" required/><br/><br/>
-        <input type="text" id="input2" class="input" placeholder="Ange slut address" required/><br/><br/>
+        <input type="text" id="input1" class="input" placeholder="Ange start adress" required/><br/><br/>
+        <input type="text" id="input2" class="input" placeholder="Ange slut adress" required/><br/><br/>
         <button id="submit_input">Rapportera resa</button>
     </div>
     <div>
-        <p id="resa"></p>
+        <div id="bottom">
+            <p id="resa"></p><br/>
+            <button>Bekräfta resa</button>
+        </div>
+        
+        <p id="go"></p>
+        <p id="to"></p>
     </div>
 </div>
 <script src="script.js"></script>
