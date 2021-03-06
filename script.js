@@ -104,7 +104,7 @@ function initMap()
       localStorage.setItem("LngStart", JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2));
       localStorage.setItem("onTheRoad", "1");
       
-      geocodeLatLng(geocoder, map, infowindow, JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2),JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2), true);
+      geocodeLatLng(geocoder, map, JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2),JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2), true);
 
       input1.disabled = true;
       btnStart.disabled = true;
@@ -133,7 +133,7 @@ function initMap()
       let x = localStorage.getItem("LatStart");
       let y = localStorage.getItem("LngStart");
       calculateDistance(directionsService, directionsRenderer, x, y, lat, lng);
-      geocodeLatLng(geocoder, map, infowindow, lat, lng, false);
+      geocodeLatLng(geocoder, map, lat, lng, false);
       iWin2.open(map);
       console.log(mapClick);
     }else{
@@ -197,7 +197,11 @@ function initMap()
 
 /************************************************************************************************************ */
 
-
+if(localStorage.getItem("LatStart")){
+  document.getElementById("input1").value = geocodeLatLng(geocoder, map, localStorage.getItem("LatStart"), localStorage.getItem("LngStart"), true);
+  input1.disabled = true;
+}
+  
 
   infoWindow = new google.maps.InfoWindow();
 
@@ -247,7 +251,7 @@ function initMap()
         localStorage.setItem("LatStart", x);
         localStorage.setItem("LngStart", y);
         localStorage.setItem("onTheRoad", "1");
-        geocodeLatLng(geocoder, map, infowindow, x, y, true);
+        geocodeLatLng(geocoder, map, x, y, true);
         input1.disabled = true;
         btnStart.disabled = true;
         btnStop.disabled = false;
@@ -272,7 +276,7 @@ function initMap()
       //btnDone.disabled = false;
       let x = localStorage.getItem("LatStart");
       let y = localStorage.getItem("LngStart");
-      geocodeLatLng(geocoder, map, infowindow, lati, long, false);
+      geocodeLatLng(geocoder, map, lati, long, false);
       calculateDistance(directionsService, directionsRenderer, x, y, lati, long);
     });
   }
@@ -455,7 +459,7 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
 
 /******* HÄMTA STAD FRÅN LATITUDE OCH LONGITUDE *****/
 
-function geocodeLatLng(geocoder, map, infowindow, x, y, z) 
+function geocodeLatLng(geocoder, map, x, y, z) 
 {
   var input = [x, y]
   const lat_lng = {
