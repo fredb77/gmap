@@ -361,6 +361,7 @@ function initMap()
       }
       
       clearLs.disabled = false;
+      btnStart.disabled = true;
       btnStop.disabled = true;
       submit_input.style.display = "none";
       
