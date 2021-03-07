@@ -13,8 +13,6 @@ var bottom = document.getElementById("bottom");
 var topbar = document.getElementById("topbar");
 var ts = document.getElementById("report_manual");
 
-
-//ts.style.display = "none";
 clearLs.disabled = true;
 
 function closeInfoWindow() {
@@ -34,25 +32,6 @@ if(bottom){
   bottom.style.display = "none";
 }
 
-/*
-if(st){
-  st.addEventListener("click", function() 
-  {
-    resa.style.display = "none";
-    if (ts.style.display === 'none') {
-      btns.style.display = "none";
-      ts.style.display = 'block';
-    } else {
-      btns.style.display = "block";
-      ts.style.display = 'none';
-    }
-    clearLs.disabled = false;
-    st.disabled = true;
-    start.disabled = true;
-    localStorage.clear();
-  });
-}
-*/
 /****** RÄNSAR LOCALSTORAGE *********/
 
 if(clearLs){
@@ -84,7 +63,6 @@ function initMap()
     types: ["address"],
   };
 
-
 /************************************************************************************************************ */
 
   var txt = "";
@@ -110,7 +88,6 @@ function initMap()
       btnStart.disabled = true;
       btnStop.disabled = false;
       iWin1.open(map);
-      console.log(mapClick);
     }else if (mapClick == 1){
       txt = "Du kör hit!";
       iWin2 = new google.maps.InfoWindow({
@@ -135,11 +112,9 @@ function initMap()
       calculateDistance(directionsService, directionsRenderer, x, y, lat, lng);
       geocodeLatLng(geocoder, map, lat, lng, false);
       iWin2.open(map);
-      console.log(mapClick);
     }else{
       localStorage.removeItem("go");
       localStorage.removeItem("to");
-      console.log(mapClick);
     }
     mapClick++;
 
@@ -148,51 +123,6 @@ function initMap()
       iWin2.close();
       mapClick = 0;
     }
-    //infoWindow.open(map);
-    
-    // Close the current InfoWindow.
-    
-    // Create a new InfoWindow.
-    /*
-    var txt = "";
-    if(click == false){
-      txt = "Du startar här!";
-    }else{
-      txt = "Du kör hit!";
-    }
-
-    if(click == false){
-      infoWindow = new google.maps.InfoWindow({
-        position: mapsMouseEvent.latLng,
-      });
-      infoWindow.setContent( 
-        txt
-      );
-      click = true;
-    }else{
-      infoWindow.close();
-      infoWindow = new google.maps.InfoWindow({
-        position: mapsMouseEvent.latLng,
-      });
-      infoWindow.setContent( 
-        txt
-        
-      );
-    }
-    
-    infoWindow.open(map);
-
-    if(click == false){
-      localStorage.setItem("go", JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2));
-    }else{
-      localStorage.setItem("to", JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2));
-    }
-
-    JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2);
-    
-    console.log(JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2));
-    console.log(JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2));
-    console.log(click);*/
   });
 
 /************************************************************************************************************ */
@@ -201,8 +131,6 @@ if(localStorage.getItem("LatStart")){
   document.getElementById("input1").value = geocodeLatLng(geocoder, map, localStorage.getItem("LatStart"), localStorage.getItem("LngStart"), true);
   input1.disabled = true;
 }
-  
-
   infoWindow = new google.maps.InfoWindow();
 
   if (navigator.geolocation) {
@@ -243,7 +171,6 @@ if(localStorage.getItem("LatStart")){
       btnStart.addEventListener("click", function() 
       {
         mapClick = 1;
-        //st.disabled = true;
         bottom.style.display = "none";
         localStorage.clear();
         let latlngarray = [x,y];
@@ -256,7 +183,6 @@ if(localStorage.getItem("LatStart")){
         btnStart.disabled = true;
         btnStop.disabled = false;
         clearLs.disabled = true;
-        //btnDone.disabled = true;
       }
     );
   }
@@ -273,23 +199,12 @@ if(localStorage.getItem("LatStart")){
       btnStop.disabled = true;
       clearLs.disabled = false;
       submit_input.style.display = "none";
-      //btnDone.disabled = false;
       let x = localStorage.getItem("LatStart");
       let y = localStorage.getItem("LngStart");
       geocodeLatLng(geocoder, map, lati, long, false);
       calculateDistance(directionsService, directionsRenderer, x, y, lati, long);
     });
   }
-  /*
-  if(btnDone){
-    btnDone.addEventListener("click", function() 
-    {
-      st.disabled = false;
-      localStorage.clear();
-      location.reload();
-    });
-  }
-  */
 
   const autocomplete = new google.maps.places.Autocomplete(
     input1,
@@ -443,19 +358,13 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
         else {
           var returResa = directionsData.distance.text;
           returResa = returResa.substring(0,returResa.length-2);
-          var sum = parseFloat(returResa);
-
-          if(retur.checked)
-            var sum = parseFloat(returResa) * 2;
-            
-          let car = sum;
-          car = car.toString();
+          let z = returResa.replace(/\s/g, '');
+          var car = parseFloat(z);
           storeInLocalstorage(latStop, lngStop, birdPath, car);
-          //geocodeAddress(geocoder, map);
         }
       }
     }); 
-}
+  }
 
 /******* HÄMTA STAD FRÅN LATITUDE OCH LONGITUDE *****/
 
@@ -467,8 +376,7 @@ function geocodeLatLng(geocoder, map, x, y, z)
       lng: parseFloat(input[1]),
   };
 
-  //const geocoder = new google.maps.Geocoder();
-var c = 0;
+  var c = 0;
   geocoder.geocode({ location: lat_lng }, (results, status) => {
     if (status === "OK") {
       if (results[0]) {
@@ -477,31 +385,19 @@ var c = 0;
           position: lat_lng,
           map: map,
         });
-        //infowindow.setContent(results[8].formatted_address);
-        //infowindow.open(map, marker);
       } else {
         window.alert("Hittade ingenting");
       }
     } else {
       window.alert("Error: " + status);
     }
-    
     if(z){
       document.getElementById("input1").value = results[0].formatted_address;
     }else{
       input2.disabled = true;
       document.getElementById("input2").value = results[0].formatted_address;
     }
-    
-    
-    
-    
-      
-
-    console.log(c);
     c++;
-      console.log(results[0].formatted_address);
-    //storeInLocalstorage(x, y);
   });
 }
 
