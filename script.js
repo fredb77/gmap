@@ -359,7 +359,7 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
           var returResa = directionsData.distance.text;
           returResa = returResa.substring(0,returResa.length-2);
           let z = returResa.replace(/\s/g, '');
-          var car = parseFloat(z);
+          let car = parseFloat(z);
           storeInLocalstorage(latStop, lngStop, birdPath, car);
         }
       }
