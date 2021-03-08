@@ -1,4 +1,5 @@
 var x, y, latitude, longitude, latitude2, longitude2;
+var loop = 0;
 var zooming = 10;
 var mapClick = localStorage.getItem("mapClick");
 var map, infoWindow;
@@ -12,6 +13,7 @@ var resa = document.getElementById("resa");
 var bottom = document.getElementById("bottom");
 var topbar = document.getElementById("topbar");
 var ts = document.getElementById("report_manual");
+var lat1;
 clearLs.disabled = true;
 
 if(localStorage.getItem("mapClick") == null){
@@ -22,7 +24,7 @@ if(localStorage.getItem("mapClick") == null){
 
 function closeInfoWindow() {
   if (infoWindow !== null) {
-      google.maps.event.clearInstanceListeners(infoWindow);  // just in case handlers continue to stick around
+      google.maps.event.clearInstanceListeners(infoWindow);
       infoWindow.close();
       infoWindow = null;
   }
@@ -51,6 +53,9 @@ if(clearLs){
 
 function initMap() 
 {    
+  if(loop == 0){
+
+  
   map = new google.maps.Map(document.getElementById("map"), {
     zoom: zooming,
     mapTypeId:google.maps.MapTypeId.ROADMAP,
@@ -75,7 +80,6 @@ function initMap()
   map.addListener("click", (mapsMouseEvent) => {
     
     if(localStorage.getItem("mapClick") == 0){
-      //localStorage.setItem("mapClick", mapClick);
       txt = "Du startar här!";
       iWin1 = new google.maps.InfoWindow({
         position: mapsMouseEvent.latLng,
@@ -117,6 +121,7 @@ function initMap()
       
       let x = localStorage.getItem("LatStart");
       let y = localStorage.getItem("LngStart");
+      
       calculateDistance(directionsService, directionsRenderer, x, y, lat, lng);
       geocodeLatLng(geocoder, map, lat, lng, false);
       iWin2.open(map);
@@ -126,19 +131,11 @@ function initMap()
 
     if(localStorage.getItem("mapClick") == 3){
       localStorage.setItem("mapClick", mapClick);
-      /*
-      clearMarkers();
-      localStorage.clear();
-      document.getElementById("resa").innerHTML = "";
-      document.getElementById("resa").style.display = "none";
-      iWin1.close();
-      iWin2.close();
-      mapClick = 0;
-      */
     }
   });
 
 /************************************************************************************************************ */
+
 
 if(localStorage.getItem("LatStart")){
   document.getElementById("input1").value = geocodeLatLng(geocoder, map, localStorage.getItem("LatStart"), localStorage.getItem("LngStart"), true);
@@ -249,8 +246,18 @@ if(localStorage.getItem("LatStart")){
       return;
     }
 
+    if(localStorage.getItem("mapClick") == 0){
+      localStorage.setItem("LatStart", place.geometry.location.lat());
+      localStorage.setItem("LngStart", place.geometry.location.lng());
+      localStorage.setItem("mapClick", 1);
+      input1.disabled = true;
+      btnStart.disabled = true;
+      btnStop.disabled = false;
+    }
+
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
+    lat1 = place.geometry.location.lat();
     latitude = place.geometry.location.lat();
     longitude = place.geometry.location.lng();
   });
@@ -307,6 +314,8 @@ if(localStorage.getItem("LatStart")){
       }
     });
   }
+}
+loop++;
 }
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) 
@@ -393,15 +402,10 @@ function geocodeLatLng(geocoder, map, x, y, z)
       lng: parseFloat(input[1]),
   };
 
-  var c = 0;
   geocoder.geocode({ location: lat_lng }, (results, status) => {
     if (status === "OK") {
       if (results[0]) {
         map.setZoom(10);
-        const marker = new google.maps.Marker({
-          position: lat_lng,
-          map: map,
-        });
       } else {
         window.alert("Hittade ingenting");
       }
@@ -414,7 +418,6 @@ function geocodeLatLng(geocoder, map, x, y, z)
       input2.disabled = true;
       document.getElementById("input2").value = results[0].formatted_address;
     }
-    c++;
   });
 }
 
@@ -471,19 +474,4 @@ function getTotalKmFromTrip()
     fågelvägen ` + bird + ` km
     <i>(`+ txt + `)</i>
   `;
-}
-
-function geocodeAddress(geocoder, resultsMap) {
-  const address = document.getElementById("address").value;
-  geocoder.geocode({ address: address }, (results, status) => {
-    if (status === "OK") {
-      resultsMap.setCenter(results[0].geometry.location);
-      new google.maps.Marker({
-        map: resultsMap,
-        position: results[0].geometry.location,
-      });
-    } else {
-      alert("Geocode was not successful for the following reason: " + status);
-    }
-  });
 }
