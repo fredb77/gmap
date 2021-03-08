@@ -55,7 +55,6 @@ function initMap()
 {    
   if(loop == 0){
 
-  
   map = new google.maps.Map(document.getElementById("map"), {
     zoom: zooming,
     mapTypeId:google.maps.MapTypeId.ROADMAP,
@@ -156,6 +155,9 @@ if(localStorage.getItem("LatStart")){
           
         new google.maps.Marker(
           {
+            icon: {                             
+              url: "http://labs.google.com/ridefinder/images/mm_20_blue.png"                           
+            },
             position: { lat: x, lng: y },
             map,
             title: whereAreYou,
@@ -271,7 +273,7 @@ if(localStorage.getItem("LatStart")){
   });
   autocomplete2.addListener("place_changed", () => {
     infowindow.close();
-    marker2.setVisible(false);
+    marker2.setVisible(true);
     const place2 = autocomplete2.getPlace();
 
     if (!place2.geometry || !place2.geometry.location) {
