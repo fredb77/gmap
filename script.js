@@ -386,6 +386,8 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
           returResa = returResa.substring(0,returResa.length-2);
           let z = returResa.replace(/\s/g, '');
           let car = parseFloat(z);
+          if(retur.checked)
+            car = car * 2;
           storeInLocalstorage(latStop, lngStop, birdPath, car);
         }
       }
