@@ -24,12 +24,12 @@
 }
 
 button{
-    font-size: 20px;
+    font-size: 16px;
     padding: 10px;
 }
 
 select{
-    font-size: 20px;
+    font-size: 16px;
     padding: 10px;
 }
 
@@ -42,6 +42,10 @@ body {
 }
 
 p{
+    font-size: 16px;
+}
+
+#lbl{
     font-size: 16px;
 }
 

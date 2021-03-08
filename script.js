@@ -1,6 +1,6 @@
 var x, y, latitude, longitude, latitude2, longitude2;
 var zooming = 10;
-var mapClick = 0;
+var mapClick = localStorage.getItem("mapClick");
 var map, infoWindow;
 var whereAreYou = "Du befinner dig här";
 var btnStart = document.getElementById("start");
@@ -12,8 +12,13 @@ var resa = document.getElementById("resa");
 var bottom = document.getElementById("bottom");
 var topbar = document.getElementById("topbar");
 var ts = document.getElementById("report_manual");
-
 clearLs.disabled = true;
+
+if(localStorage.getItem("mapClick") == null){
+  localStorage.setItem("mapClick", 0);
+}else{
+  mapClick = mapClick;
+}
 
 function closeInfoWindow() {
   if (infoWindow !== null) {
@@ -69,7 +74,8 @@ function initMap()
   var iWin1, iWin2;
   map.addListener("click", (mapsMouseEvent) => {
     
-    if(mapClick == 0){
+    if(localStorage.getItem("mapClick") == 0){
+      //localStorage.setItem("mapClick", mapClick);
       txt = "Du startar här!";
       iWin1 = new google.maps.InfoWindow({
         position: mapsMouseEvent.latLng,
@@ -88,7 +94,9 @@ function initMap()
       btnStart.disabled = true;
       btnStop.disabled = false;
       iWin1.open(map);
-    }else if (mapClick == 1){
+    }else if (localStorage.getItem("mapClick") == 1){
+      localStorage.setItem("mapClick", mapClick);
+      resa.style.display = "block";
       txt = "Du kör hit!";
       iWin2 = new google.maps.InfoWindow({
         position: mapsMouseEvent.latLng,
@@ -112,16 +120,21 @@ function initMap()
       calculateDistance(directionsService, directionsRenderer, x, y, lat, lng);
       geocodeLatLng(geocoder, map, lat, lng, false);
       iWin2.open(map);
-    }else{
-      localStorage.removeItem("go");
-      localStorage.removeItem("to");
     }
     mapClick++;
+    localStorage.setItem("mapClick", mapClick);
 
-    if(mapClick == 3){
+    if(localStorage.getItem("mapClick") == 3){
+      localStorage.setItem("mapClick", mapClick);
+      /*
+      clearMarkers();
+      localStorage.clear();
+      document.getElementById("resa").innerHTML = "";
+      document.getElementById("resa").style.display = "none";
       iWin1.close();
       iWin2.close();
       mapClick = 0;
+      */
     }
   });
 
@@ -270,24 +283,28 @@ if(localStorage.getItem("LatStart")){
 
   if(submit_input){
     submit_input.addEventListener("click", function() 
-    {
-      if(localStorage.getItem("onTheRoad") == 1){
-        latitude = localStorage.getItem("LatStart");
-        longitude = localStorage.getItem("LngStart");
+    {  
+      if(document.getElementById("input1").value.length == 0 || document.getElementById("input2").value.length == 0){
+        alert("Du måste fylla i adress!");
       }else{
-        localStorage.setItem("LatStart", latitude);
-        localStorage.setItem("LngStart", longitude);
+        if(localStorage.getItem("onTheRoad") == 1){
+          latitude = localStorage.getItem("LatStart");
+          longitude = localStorage.getItem("LngStart");
+        }else{
+          localStorage.setItem("LatStart", latitude);
+          localStorage.setItem("LngStart", longitude);
+        }
+        
+        clearLs.disabled = false;
+        btnStart.disabled = true;
+        btnStop.disabled = true;
+        submit_input.style.display = "none";
+        
+        localStorage.setItem("manual", "1");
+        input1.disabled = true;
+        input2.disabled = true;
+        calculateDistance(directionsService, directionsRenderer, latitude, longitude, latitude2, longitude2);
       }
-      
-      clearLs.disabled = false;
-      btnStart.disabled = true;
-      btnStop.disabled = true;
-      submit_input.style.display = "none";
-      
-      localStorage.setItem("manual", "1");
-      input1.disabled = true;
-      input2.disabled = true;
-      calculateDistance(directionsService, directionsRenderer, latitude, longitude, latitude2, longitude2);
     });
   }
 }
@@ -346,13 +363,13 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
     function(response, status) 
     {
       if (status !== 'OK') {
-        window.alert('Directions request failed due to ' + status);
+        window.alert('Hittar inte rutten! prova igen skriv in rutten igen.');
         return;
       } else {
         directionsRenderer.setDirections(response); // SKAPAR RUTT PÅ KARTAN
         var directionsData = response.routes[0].legs[0];
         if (!directionsData) {
-          window.alert('Directions request failed');
+          window.alert('Hittar inte rutten! prova igen.');
           return;
         }
         else {
