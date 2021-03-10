@@ -135,7 +135,17 @@ if(localStorage.getItem("LatStart")){
             title: whereAreYou,
           }
         );
-        map.setCenter(pos);
+        if(localStorage.getItem("redo") != 1){
+          map.setCenter(pos);
+        }else{
+          let arr = {
+            lat: Number(localStorage.getItem("LatStart")),
+            lng: Number(localStorage.getItem("LngStart"))
+          }
+          map.setCenter(arr);
+          console.log(arr);
+        }
+          
       },
       () => {
         handleLocationError(true, infoWindow, map.getCenter());
@@ -191,6 +201,9 @@ if(localStorage.getItem("LatStart")){
       var k = document.getElementById("end").value;
       var lati = k.substr(0, k.indexOf(','));
       var long = k.substring(k.indexOf(',') + 1);
+      if(localStorage.getItem("on") != 1){
+        marker.setMap(null);
+      }
       localStorage.setItem("LatStop", lati);
       localStorage.setItem("LngStop", long);
       btnStart.disabled = true;
