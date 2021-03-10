@@ -1,0 +1,136 @@
+#main {
+    width: 100%;
+    text-align: left;
+}
+
+.input{
+    font-size: 15px;
+    width: 500px;
+    padding: 10px;
+}
+
+#resa{
+    width: fit-content;
+    font-family: 'Montserrat', sans-serif;
+    background-color: white;
+    border: black 1px solid;
+    padding: 20px;
+}
+
+#map {
+    height: 50%;
+    width: 100%;
+    border: 1px black solid;
+}
+
+button{
+    font-size: 16px;
+    padding: 10px;
+}
+
+select{
+    font-size: 16px;
+    padding: 10px;
+}
+
+html,
+body {
+    background-color: snow;
+    height: 100%;
+    margin: 5;  
+    padding: 1;
+}
+
+p{
+    font-size: 16px;
+}
+
+#lbl{
+    font-size: 16px;
+}
+
+/* ----------- iPhone X ----------- */
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3) { 
+    
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) { 
+    #main {
+        width: 100%;
+        text-align: left;
+    }
+
+    #resa{
+        width: 100%;
+        font-family: 'Montserrat', sans-serif;
+        background-color: aliceblue;
+        border: black 1px solid;
+        padding: 20px;
+    }
+    
+    .input{
+        font-size: 15px;
+        width: 500px;
+    }
+    
+    #map {
+        scale: 10;
+        height: 35%;
+        width: 100%;
+        border: 1px black solid;
+    }
+    
+    button{
+        font-size: 65px;
+        padding: 20px;
+        margin-top: 25px;
+        margin-bottom: 25px;
+        width: 100%;
+    }
+    
+    html,
+    body {
+        height: 100%;
+        margin: 5;  
+        padding: 1;
+    }
+    
+    p{
+        font-size: 35px;
+    }
+
+    #top{
+        font-size: 45px;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    input[type=checkbox] {
+        transform: scale(5.5);
+        margin: 10px;
+    }
+
+    #lbl{
+        font-size: 45px;
+        margin-left: 30px;
+    }
+}
+
+/* Landscape */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: landscape) { 
+
+}
