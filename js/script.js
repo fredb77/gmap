@@ -77,7 +77,10 @@ function initMap()
       btnStart.disabled = true;
       btnStop.disabled = false;
     }else if (localStorage.getItem("mapclick") == 1){
-      marker.setMap(null);
+      if(localStorage.getItem("on") != 1){
+        marker.setMap(null);
+      }
+      
       localStorage.setItem("mapclick", mapclick);
       btnRedo.disabled = false;
       resa.style.display = "block";
@@ -168,8 +171,7 @@ if(localStorage.getItem("LatStart")){
       {
         bottom.style.display = "none";
         localStorage.clear();
-        let latlngarray = [x,y];
-        localStorage["latlngarray"] = JSON.stringify(latlngarray);
+        localStorage.setItem("on", 1);
         localStorage.setItem("LatStart", x);
         localStorage.setItem("LngStart", y);
         localStorage.setItem("onTheRoad", "1");
