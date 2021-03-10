@@ -3,7 +3,7 @@ var loop = 0;
 var zooming = 10;
 var mapClick = localStorage.getItem("mapClick");
 var map, infoWindow;
-var whereAreYou = "Du befinner dig här";
+var whereAreYou = "Din position";
 var btnStart = document.getElementById("start");
 var btnStop = document.getElementById("stop");
 var btnDone = document.getElementById("done");
@@ -13,21 +13,16 @@ var resa = document.getElementById("resa");
 var bottom = document.getElementById("bottom");
 var topbar = document.getElementById("topbar");
 var ts = document.getElementById("report_manual");
-var lat1;
+var lat1, laa;
+var txt = "";
+var iWin1, iWin2;
 clearLs.disabled = true;
+btnRedo.disabled = true;
 
 if(localStorage.getItem("mapClick") == null){
   localStorage.setItem("mapClick", 0);
 }else{
   mapClick = mapClick;
-}
-
-function closeInfoWindow() {
-  if (infoWindow !== null) {
-      google.maps.event.clearInstanceListeners(infoWindow);
-      infoWindow.close();
-      infoWindow = null;
-  }
 }
 
 if(localStorage.getItem("onTheRoad") == 1){
@@ -74,19 +69,10 @@ function initMap()
 
 /************************************************************************************************************ */
 
-  var txt = "";
-  var iWin1, iWin2;
   map.addListener("click", (mapsMouseEvent) => {
-    
     if(localStorage.getItem("mapClick") == 0){
-      txt = "Du startar här!";
-      iWin1 = new google.maps.InfoWindow({
-        position: mapsMouseEvent.latLng,
-      });
-      iWin1.setContent( 
-        txt
-      );
-
+      laa = mapsMouseEvent.latLng;
+      addMarker(mapsMouseEvent.latLng);
       localStorage.setItem("LatStart", JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2));
       localStorage.setItem("LngStart", JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2));
       localStorage.setItem("onTheRoad", "1");
@@ -96,21 +82,13 @@ function initMap()
       input1.disabled = true;
       btnStart.disabled = true;
       btnStop.disabled = false;
-      iWin1.open(map);
     }else if (localStorage.getItem("mapClick") == 1){
       localStorage.setItem("mapClick", mapClick);
+      btnRedo.disabled = false;
       resa.style.display = "block";
       txt = "Du kör hit!";
-      iWin2 = new google.maps.InfoWindow({
-        position: mapsMouseEvent.latLng,
-      });
-      iWin2.setContent( 
-        txt
-      );
-
       var lat = JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2);
       var lng = JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2);
-
       localStorage.setItem("LatStop", lat);
       localStorage.setItem("LngStop", lng);
       btnStart.disabled = true;
@@ -123,7 +101,6 @@ function initMap()
       
       calculateDistance(directionsService, directionsRenderer, x, y, lat, lng);
       geocodeLatLng(geocoder, map, lat, lng, false);
-      iWin2.open(map);
     }
     mapClick++;
     localStorage.setItem("mapClick", mapClick);
@@ -149,13 +126,13 @@ if(localStorage.getItem("LatStart")){
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
-        
+
         x = pos.lat;
         y = pos.lng;
-          
+        
         new google.maps.Marker(
           {
-            icon: {                             
+            icon: {           
               url: "http://labs.google.com/ridefinder/images/mm_20_blue.png"                           
             },
             position: { lat: x, lng: y },
@@ -182,7 +159,6 @@ if(localStorage.getItem("LatStart")){
   if(btnStart){
       btnStart.addEventListener("click", function() 
       {
-        mapClick = 1;
         bottom.style.display = "none";
         localStorage.clear();
         let latlngarray = [x,y];
@@ -190,6 +166,7 @@ if(localStorage.getItem("LatStart")){
         localStorage.setItem("LatStart", x);
         localStorage.setItem("LngStart", y);
         localStorage.setItem("onTheRoad", "1");
+        localStorage.setItem("mapClick", 1);
         geocodeLatLng(geocoder, map, x, y, true);
         input1.disabled = true;
         btnStart.disabled = true;
@@ -209,6 +186,7 @@ if(localStorage.getItem("LatStart")){
       localStorage.setItem("LngStop", long);
       btnStart.disabled = true;
       btnStop.disabled = true;
+      btnRedo.disabled = false;
       clearLs.disabled = false;
       submit_input.style.display = "none";
       let x = localStorage.getItem("LatStart");
@@ -229,16 +207,7 @@ if(localStorage.getItem("LatStart")){
   );
 
   autocomplete.bindTo("bounds", map);
-  const infowindow = new google.maps.InfoWindow();
-  const infowindowContent = document.getElementById("infowindow-content");
-  infowindow.setContent(infowindowContent);
-  const marker = new google.maps.Marker({
-    map,
-    anchorPoint: new google.maps.Point(0, -29),
-  });
   autocomplete.addListener("place_changed", () => {
-    infowindow.close();
-    marker.setVisible(false);
     const place = autocomplete.getPlace();
 
     if (!place.geometry || !place.geometry.location) {
@@ -257,23 +226,13 @@ if(localStorage.getItem("LatStart")){
       btnStop.disabled = false;
     }
 
-    marker.setPosition(place.geometry.location);
-    marker.setVisible(true);
     lat1 = place.geometry.location.lat();
     latitude = place.geometry.location.lat();
     longitude = place.geometry.location.lng();
   });
 
   autocomplete2.bindTo("bounds", map);
-  const infowindowContent2 = document.getElementById("infowindow-content");
-  infowindow.setContent(infowindowContent2);
-  const marker2 = new google.maps.Marker({
-    map,
-    anchorPoint: new google.maps.Point(0, -29),
-  });
   autocomplete2.addListener("place_changed", () => {
-    infowindow.close();
-    marker2.setVisible(true);
     const place2 = autocomplete2.getPlace();
 
     if (!place2.geometry || !place2.geometry.location) {
@@ -282,9 +241,6 @@ if(localStorage.getItem("LatStart")){
       );
       return;
     }
-    
-    marker.setPosition(place2.geometry.location);
-    marker.setVisible(true);
 
     latitude2 = place2.geometry.location.lat();
     longitude2 = place2.geometry.location.lng();
@@ -303,10 +259,10 @@ if(localStorage.getItem("LatStart")){
           localStorage.setItem("LatStart", latitude);
           localStorage.setItem("LngStart", longitude);
         }
-        
         clearLs.disabled = false;
         btnStart.disabled = true;
         btnStop.disabled = true;
+        btnRedo.disabled = false;
         submit_input.style.display = "none";
         
         localStorage.setItem("manual", "1");
@@ -478,4 +434,65 @@ function getTotalKmFromTrip()
     fågelvägen ` + bird + ` km
     <i>(`+ txt + `)</i>
   `;
+}
+
+function displayRoute(origin, destination, service, display) {
+  service.route(
+    {
+      origin: origin,
+      destination: destination,
+      
+      travelMode: google.maps.TravelMode.DRIVING,
+    },
+    (result, status) => {
+      if (status === "OK" && result) {
+        display.setDirections(result);
+      } else {
+        alert("Could not display directions due to: " + status);
+      }
+    }
+  );
+}
+
+function computeTotalDistance(result) {
+  let total = 0;
+  const myroute = result.routes[0];
+
+  if (!myroute) {
+    return;
+  }
+
+  for (let i = 0; i < myroute.legs.length; i++) {
+    total += myroute.legs[i].distance.value;
+  }
+  total = total / 1000;
+  document.getElementById("total").innerHTML = total + " km";
+}
+
+function redo()
+{
+  location.reload(); 
+  
+  localStorage.setItem("mapClick", 1);
+  localStorage.removeItem("LatStop");
+  localStorage.removeItem("LngStop");
+  localStorage.removeItem("Rutt");
+  
+  var myLatlng = new google.maps.LatLng(parseFloat(localStorage.getItem('LatStart')),parseFloat(parseFloat(localStorage.getItem('LngStart'))));
+  addMarker(myLatlng);
+}
+
+function addMarker(x)
+{  
+  let markers = JSON.parse(localStorage.getItem("markers"));
+  if(markers == null) markers = [];
+  
+  var marker = new google.maps.Marker({
+    position: x,
+    map,
+    title: "Start!",  
+  });
+  markers.push(x);
+  localStorage.setItem("markers", markers);
+  marker.setMap(map);
 }

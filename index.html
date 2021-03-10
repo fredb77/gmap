@@ -19,6 +19,7 @@
         <button id="start">START</button>
         <button id="stop" disabled>STOP</button>
         <button id="clearLs">NY RESA</button>
+        <button id="btnRedo" onclick="redo()">Ångra</button>
         <select id="end">
             <option value="59.334591,18.063240">Stockholm</option>
             <option value="57.708870,11.974560">Göteborg</option>
@@ -30,9 +31,9 @@
             <option value="59.911491,10.757933">Oslo</option>
             <option value="55.676098,12.568337">Köpenhamn</option>
         </select>
-        <input type="checkbox" id="retur" name="retur"><label id="lbl" for="retur">Tur och retur</label>
     </div>
-    <br/><br/>
+    <div><br/><input type="checkbox" id="retur" name="retur"><label id="lbl" for="retur">Tur och retur</label></div>
+    <br/>
     <div id="report_manual">
         <input type="text" id="input1" class="input" placeholder="Ange start adress" onchange="initMap()"/><br/><br/>
         <input type="text" id="input2" class="input" placeholder="Ange slut adress"/><br/><br/>
