@@ -230,6 +230,7 @@ if(localStorage.getItem("LatStart")){
       localStorage.setItem("LatStart", place.geometry.location.lat());
       localStorage.setItem("LngStart", place.geometry.location.lng());
       localStorage.setItem("mapclick", 1);
+      localStorage.setItem("on", 1);
       input1.disabled = true;
       btnStart.disabled = true;
       btnStop.disabled = false;
