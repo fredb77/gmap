@@ -492,15 +492,15 @@ function computeTotalDistance(result) {
 
 function redo()
 {
-  location.reload(); 
   localStorage.setItem("redo", 1);
   localStorage.setItem("mapclick", 1);
   localStorage.removeItem("LatStop");
   localStorage.removeItem("LngStop");
   localStorage.removeItem("Rutt");
-  
-  var myLatlng = new google.maps.LatLng(parseFloat(localStorage.getItem('LatStart')),parseFloat(parseFloat(localStorage.getItem('LngStart'))));
+  let myLatlng = new google.maps.LatLng(parseFloat(localStorage.getItem('LatStart')),parseFloat(parseFloat(localStorage.getItem('LngStart'))));
   addMarker(myLatlng);
+  
+  location.reload();
 }
 
 function addMarker(x,y)

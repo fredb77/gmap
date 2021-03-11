@@ -67,7 +67,7 @@ p{
   and (orientation: portrait) { 
     #main {
         width: 100%;
-        text-align: left;
+        text-align: center;
     }
 
     #resa{
@@ -76,6 +76,16 @@ p{
         background-color: aliceblue;
         border: black 1px solid;
         padding: 20px;
+    }
+
+    #input1{
+        width: 100%;
+        font-size: 45px;
+    }
+
+    #input2{
+        width: 100%;
+        font-size: 45px;
     }
     
     .input{
