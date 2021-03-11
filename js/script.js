@@ -77,18 +77,16 @@ function initMap()
       localStorage.setItem("mapclick", mapclick);
       btnRedo.disabled = false;
       resa.style.display = "block";
-      var lat = JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2);
-      var lng = JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2);
+      let lat = JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2);
+      let lng = JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2);
       localStorage.setItem("LatStop", lat);
       localStorage.setItem("LngStop", lng);
       btnStart.disabled = true;
       btnStop.disabled = true;
       clearLs.disabled = false;
       submit_input.style.display = "none";
-      
       let x = localStorage.getItem("LatStart");
       let y = localStorage.getItem("LngStart");
-      
       calculateDistance(directionsService, directionsRenderer, x, y, lat, lng);
       geocodeLatLng(geocoder, map, lat, lng, false);
     }
@@ -187,9 +185,11 @@ if(localStorage.getItem("LatStart")){
   if(btnStop){
     btnStop.addEventListener("click", function() 
     {
-      var k = document.getElementById("end").value;
-      var lati = k.substr(0, k.indexOf(','));
-      var long = k.substring(k.indexOf(',') + 1);
+      let k = document.getElementById("end").value;
+      let lati = k.substr(0, k.indexOf(','));
+      let long = k.substring(k.indexOf(',') + 1);
+      let x = localStorage.getItem("LatStart");
+      let y = localStorage.getItem("LngStart");
       if(localStorage.getItem("on") != 1){
         marker.setMap(null);
       }
@@ -200,8 +200,6 @@ if(localStorage.getItem("LatStart")){
       btnRedo.disabled = false;
       clearLs.disabled = false;
       submit_input.style.display = "none";
-      let x = localStorage.getItem("LatStart");
-      let y = localStorage.getItem("LngStart");
       geocodeLatLng(geocoder, map, lati, long, false);
       calculateDistance(directionsService, directionsRenderer, x, y, lati, long);
     });
@@ -295,15 +293,15 @@ infoWindow.open(map);
 /******** RÄKNAR UT KILOMETER MELLAN DESTINATIONERNA (FÅGELVÄGEN) ********/
 function calculateDistance(directionsService, directionsRenderer, latStart, lngStart, latStop, lngStop)
 {
-  var R = 6378.137; // Radien på jorden i km
-  var dLat = latStop * Math.PI / 180 - latStart * Math.PI / 180;
-  var dLon = lngStop * Math.PI / 180 - lngStart * Math.PI / 180;
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+  let R = 6378.137; // Radien på jorden i km
+  let dLat = latStop * Math.PI / 180 - latStart * Math.PI / 180;
+  let dLon = lngStop * Math.PI / 180 - lngStart * Math.PI / 180;
+  let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
   Math.cos(latStart * Math.PI / 180) * Math.cos(latStop * Math.PI / 180) *
   Math.sin(dLon/2) * Math.sin(dLon/2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  var d = R * c;
-  var bird = d.toFixed(0);
+  let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  let d = R * c;
+  let bird = d.toFixed(0);
   if(retur.checked){
     localStorage.setItem("retur", 1);
     bird = bird * 2;
@@ -319,7 +317,7 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
     localStorage.getItem("LatStart"), 
     localStorage.getItem("LngStart")
   ];
-  var startLocation = arr.toString();
+  let startLocation = arr.toString();
   let arr2 = [latStop, lngStop];
   let endLocation = arr2.toString();
   const route = {
@@ -335,12 +333,12 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
         return;
       } else {
         directionsRenderer.setDirections(response); // SKAPAR RUTT PÅ KARTAN
-        var directionsData = response.routes[0].legs[0];
+        let directionsData = response.routes[0].legs[0];
         if (!directionsData) {
           window.alert('Hittar inte rutten! prova igen.');
           return;
         }else {
-          var returResa = directionsData.distance.text;
+          let returResa = directionsData.distance.text;
           returResa = returResa.substring(0,returResa.length-2);
           let z = returResa.replace(/\s/g, '');
           let car = parseFloat(z);
@@ -355,7 +353,7 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer, latStop
 /******* HÄMTA STAD FRÅN LATITUDE OCH LONGITUDE *****/
 function geocodeLatLng(geocoder, map, x, y, z) 
 {
-  var input = [x, y]
+  let input = [x, y]
   const lat_lng = {
       lat: parseFloat(input[0]),
       lng: parseFloat(input[1]),
@@ -407,11 +405,9 @@ function storeInLocalstorage(x, y, birdPath, carPath)
 
 function getTotalKmFromTrip()
 {
-  var dataInLs = JSON.parse(localStorage.getItem("Rutt"));
+  let dataInLs = JSON.parse(localStorage.getItem("Rutt"));
   if (!dataInLs) return [];
-  
   let bird = 0, car = 0;
-
   for(let i = 0; i < dataInLs.length; i++){
     bird = bird + Number(dataInLs[i].birdPath); // FÅGELVÄGEN
     car = car + Number(dataInLs[i].carPath);    // BILVÄGEN
