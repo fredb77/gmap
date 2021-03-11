@@ -155,6 +155,7 @@ if(localStorage.getItem("LatStart")){
   directionsRenderer.setMap(map);
 
   if(localStorage.getItem("redo") == 1){
+    clearLs.disabled = false;
     let x = parseFloat(localStorage.getItem('LatStart'));
     let y = parseFloat(localStorage.getItem('LngStart'));
     let arr = {
