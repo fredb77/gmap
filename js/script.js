@@ -16,7 +16,7 @@ var ts = document.getElementById("report_manual");
 clearLs.disabled = true;
 btnRedo.disabled = true;
 
-if(localStorage.getItem("mapclick") == null){
+if(mapclick == null){
   localStorage.setItem("mapclick", 0);
 }else{
   mapclick = mapclick;
@@ -52,7 +52,6 @@ function initMap()
   });
 
   const geocoder = new google.maps.Geocoder();
-
   const input1 = document.getElementById("input1");
   const input2 = document.getElementById("input2");
   const options = {
@@ -70,9 +69,7 @@ function initMap()
       localStorage.setItem("LatStart", JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2));
       localStorage.setItem("LngStart", JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2));
       localStorage.setItem("onTheRoad", "1");
-      
       geocodeLatLng(geocoder, map, JSON.stringify(mapsMouseEvent.latLng.toJSON().lat, null, 2),JSON.stringify(mapsMouseEvent.latLng.toJSON().lng, null, 2), true);
-        
       input1.disabled = true;
       btnStart.disabled = true;
       btnStop.disabled = false;
@@ -80,7 +77,6 @@ function initMap()
       if(localStorage.getItem("on") != 1){
         marker.setMap(null);
       }
-      
       localStorage.setItem("mapclick", mapclick);
       btnRedo.disabled = false;
       resa.style.display = "block";
@@ -120,14 +116,11 @@ if(localStorage.getItem("LatStart")){
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
-
         x = pos.lat;
         y = pos.lng;
-        
         new google.maps.Marker(
           {
-            icon: {           
-              //url: "http://labs.google.com/ridefinder/images/mm_20_blue.png"                           
+            icon: {                          
               url: "img/yellow.png"
             },
             position: { lat: x, lng: y },
@@ -145,7 +138,6 @@ if(localStorage.getItem("LatStart")){
           map.setCenter(arr);
           console.log(arr);
         }
-          
       },
       () => {
         handleLocationError(true, infoWindow, map.getCenter());
@@ -244,6 +236,7 @@ if(localStorage.getItem("LatStart")){
       localStorage.setItem("LngStart", place.geometry.location.lng());
       localStorage.setItem("mapclick", 1);
       localStorage.setItem("on", 1);
+      localStorage.setItem("onTheRoad", 1);
       input1.disabled = true;
       btnStart.disabled = true;
       btnStop.disabled = false;
@@ -462,7 +455,6 @@ function displayRoute(origin, destination, service, display) {
     {
       origin: origin,
       destination: destination,
-      
       travelMode: google.maps.TravelMode.DRIVING,
     },
     (result, status) => {
@@ -478,11 +470,9 @@ function displayRoute(origin, destination, service, display) {
 function computeTotalDistance(result) {
   let total = 0;
   const myroute = result.routes[0];
-
   if (!myroute) {
     return;
   }
-
   for (let i = 0; i < myroute.legs.length; i++) {
     total += myroute.legs[i].distance.value;
   }
@@ -499,7 +489,6 @@ function redo()
   localStorage.removeItem("Rutt");
   let myLatlng = new google.maps.LatLng(parseFloat(localStorage.getItem('LatStart')),parseFloat(parseFloat(localStorage.getItem('LngStart'))));
   addMarker(myLatlng);
-  
   location.reload();
 }
 
