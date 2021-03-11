@@ -16,6 +16,9 @@ var ts = document.getElementById("report_manual");
 clearLs.disabled = true;
 btnRedo.disabled = true;
 
+if(localStorage.getItem("retur") == 1)
+  retur.checked = true;
+
 if(mapclick == null){
   localStorage.setItem("mapclick", 0);
 }else{
@@ -136,7 +139,6 @@ if(localStorage.getItem("LatStart")){
             lng: Number(localStorage.getItem("LngStart"))
           }
           map.setCenter(arr);
-          console.log(arr);
         }
       },
       () => {
@@ -278,8 +280,6 @@ if(localStorage.getItem("LatStart")){
         btnStop.disabled = true;
         btnRedo.disabled = false;
         submit_input.style.display = "none";
-        
-        localStorage.setItem("manual", "1");
         input1.disabled = true;
         input2.disabled = true;
         calculateDistance(directionsService, directionsRenderer, latitude, longitude, latitude2, longitude2);
@@ -315,6 +315,7 @@ function calculateDistance(directionsService, directionsRenderer, latStart, lngS
     var d = R * c;
     var bird = d.toFixed(0);
     if(retur.checked){
+      localStorage.setItem("retur", 1);
       bird = bird * 2;
       bird = bird.toString();
     }
